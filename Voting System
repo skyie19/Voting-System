@@ -1,0 +1,72 @@
+import java.util.*;
+
+public class VotingSystem {
+    private Set<String> voters;
+    private Map<String, Integer> candidates;
+    private Scanner scanner;
+    
+    public VotingSystem() {
+        voters = new HashSet<>();
+        candidates = new HashMap<>();
+        scanner = new Scanner(System.in);
+    }
+
+    // Register candidates from user input
+    public void registerCandidates() {
+        System.out.print("Enter number of candidates to register: ");
+        int count = Integer.parseInt(scanner.nextLine());
+
+        for (int i = 0; i < count; i++) {
+            System.out.print("Enter candidate name #" + (i + 1) + ": ");
+            String name = scanner.nextLine();
+            if (!candidates.containsKey(name)) {
+                candidates.put(name, 0);
+                System.out.println("Candidate '" + name + "' registered.");
+            } else {
+                System.out.println("Candidate '" + name + "' is already registered.");
+            }
+        }
+    }
+
+    // Voting process
+    public void startVoting() {
+        String choice;
+        do {
+            System.out.print("\nEnter your User ID: ");
+            String userId = scanner.nextLine();
+
+            if (voters.contains(userId)) {
+                System.out.println("User '" + userId + "' has already voted.");
+            } else {
+                System.out.print("Enter candidate name to vote for: ");
+                String candidate = scanner.nextLine();
+
+                if (!candidates.containsKey(candidate)) {
+                    System.out.println("Candidate '" + candidate + "' is not registered.");
+                } else {
+                    candidates.put(candidate, candidates.get(candidate) + 1);
+                    voters.add(userId);
+                    System.out.println("Vote recorded for '" + candidate + "'.");
+                }
+            }
+
+            System.out.print("Do you want to continue voting? (yes/no): ");
+            choice = scanner.nextLine().trim().toLowerCase();
+        } while (choice.equals("yes"));
+    }
+
+    // Display final results
+    public void displayResults() {
+        System.out.println("\n--- Final Voting Results ---");
+        for (Map.Entry<String, Integer> entry : candidates.entrySet()) {
+            System.out.println("Candidate: " + entry.getKey() + " - Votes: " + entry.getValue());
+        }
+    }
+
+    public static void main(String[] args) {
+        VotingSystem system = new VotingSystem();
+        system.registerCandidates();
+        system.startVoting();
+        system.displayResults();
+    }
+}
